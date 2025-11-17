@@ -1,0 +1,211 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem}
+
+\title{QCM de Mathématiques - Test de Formules LaTeX}
+\author{Test}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Questions à Choix Multiples}
+
+\subsection{Question 1 - Équations du second degré}
+
+Soit l'équation : $ax^2 + bx + c = 0$ avec $a \neq 0$
+
+Les solutions de cette équation sont données par :
+\begin{equation}
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\end{equation}
+
+Le discriminant est : $\Delta = b^2 - 4ac$
+
+\textbf{Question :} Si $\Delta > 0$, combien de solutions réelles l'équation possède-t-elle ?
+
+\begin{enumerate}[label=\alph*)]
+    \item 0 solution
+    \item 1 solution
+    \item 2 solutions distinctes
+    \item Une infinité de solutions
+\end{enumerate}
+
+\textbf{Réponse correcte : c)}
+
+\subsection{Question 2 - Dérivées}
+
+Soit la fonction $f(x) = x^n$ où $n \in \mathbb{N}$
+
+\textbf{Question :} Quelle est la dérivée de $f$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $f'(x) = nx^{n-1}$
+    \item $f'(x) = nx^{n}$
+    \item $f'(x) = (n-1)x^{n-1}$
+    \item $f'(x) = x^{n-1}$
+\end{enumerate}
+
+\textbf{Réponse correcte : a)}
+
+\subsection{Question 3 - Intégrales}
+
+\textbf{Question :} Quelle est la valeur de $\displaystyle\int_0^1 x^2 \, dx$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $\dfrac{1}{2}$
+    \item $\dfrac{1}{3}$
+    \item $\dfrac{2}{3}$
+    \item $1$
+\end{enumerate}
+
+Calcul :
+\begin{align}
+\int_0^1 x^2 \, dx &= \left[\frac{x^3}{3}\right]_0^1 \\
+&= \frac{1^3}{3} - \frac{0^3}{3} \\
+&= \frac{1}{3}
+\end{align}
+
+\textbf{Réponse correcte : b)}
+
+\subsection{Question 4 - Limites}
+
+\textbf{Question :} Quelle est la valeur de $\displaystyle\lim_{x \to 0} \frac{\sin(x)}{x}$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $0$
+    \item $1$
+    \item $+\infty$
+    \item La limite n'existe pas
+\end{enumerate}
+
+\textbf{Réponse correcte : b)}
+
+\subsection{Question 5 - Matrices}
+
+Soit les matrices :
+\[
+A = \begin{pmatrix}
+1 & 2 \\
+3 & 4
+\end{pmatrix}
+\quad \text{et} \quad
+B = \begin{pmatrix}
+5 & 6 \\
+7 & 8
+\end{pmatrix}
+\]
+
+\textbf{Question :} Quelle est la valeur de $A \times B$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $\begin{pmatrix} 19 & 22 \\ 43 & 50 \end{pmatrix}$
+    \item $\begin{pmatrix} 5 & 12 \\ 21 & 32 \end{pmatrix}$
+    \item $\begin{pmatrix} 6 & 8 \\ 10 & 12 \end{pmatrix}$
+    \item $\begin{pmatrix} 19 & 43 \\ 22 & 50 \end{pmatrix}$
+\end{enumerate}
+
+Calcul :
+\begin{align}
+A \times B &= \begin{pmatrix}
+1 \times 5 + 2 \times 7 & 1 \times 6 + 2 \times 8 \\
+3 \times 5 + 4 \times 7 & 3 \times 6 + 4 \times 8
+\end{pmatrix} \\
+&= \begin{pmatrix}
+19 & 22 \\
+43 & 50
+\end{pmatrix}
+\end{align}
+
+\textbf{Réponse correcte : a)}
+
+\subsection{Question 6 - Séries}
+
+\textbf{Question :} Quelle est la valeur de $\displaystyle\sum_{n=1}^{\infty} \frac{1}{2^n}$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $\dfrac{1}{2}$
+    \item $1$
+    \item $2$
+    \item La série diverge
+\end{enumerate}
+
+C'est une série géométrique avec $a = \frac{1}{2}$ et $r = \frac{1}{2}$ :
+\[
+\sum_{n=1}^{\infty} \frac{1}{2^n} = \frac{a}{1-r} = \frac{\frac{1}{2}}{1-\frac{1}{2}} = \frac{\frac{1}{2}}{\frac{1}{2}} = 1
+\]
+
+\textbf{Réponse correcte : b)}
+
+\subsection{Question 7 - Probabilités}
+
+\textbf{Question :} On lance un dé équilibré à 6 faces. Quelle est la probabilité d'obtenir un nombre pair ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $\dfrac{1}{6}$
+    \item $\dfrac{1}{3}$
+    \item $\dfrac{1}{2}$
+    \item $\dfrac{2}{3}$
+\end{enumerate}
+
+Les nombres pairs sont : $\{2, 4, 6\}$, soit 3 cas favorables sur 6 possibles.
+\[
+P(\text{pair}) = \frac{3}{6} = \frac{1}{2}
+\]
+
+\textbf{Réponse correcte : c)}
+
+\subsection{Question 8 - Trigonométrie}
+
+\textbf{Question :} Quelle est la valeur de $\cos^2(x) + \sin^2(x)$ pour tout $x \in \mathbb{R}$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $0$
+    \item $1$
+    \item $2$
+    \item Dépend de $x$
+\end{enumerate}
+
+\textbf{Réponse correcte : b)} (Identité trigonométrique fondamentale)
+
+\subsection{Question 9 - Logarithmes}
+
+\textbf{Question :} Quelle est la valeur de $\ln(e^3)$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $e^3$
+    \item $3$
+    \item $3e$
+    \item $\dfrac{1}{3}$
+\end{enumerate}
+
+Propriété : $\ln(e^x) = x$, donc $\ln(e^3) = 3$
+
+\textbf{Réponse correcte : b)}
+
+\subsection{Question 10 - Vecteurs}
+
+Soient les vecteurs $\vec{u} = \begin{pmatrix} 1 \\ 2 \end{pmatrix}$ et $\vec{v} = \begin{pmatrix} 3 \\ 4 \end{pmatrix}$
+
+\textbf{Question :} Quel est le produit scalaire $\vec{u} \cdot \vec{v}$ ?
+
+\begin{enumerate}[label=\alph*)]
+    \item $5$
+    \item $7$
+    \item $11$
+    \item $14$
+\end{enumerate}
+
+Calcul :
+\[
+\vec{u} \cdot \vec{v} = 1 \times 3 + 2 \times 4 = 3 + 8 = 11
+\]
+
+\textbf{Réponse correcte : c)}
+
+\end{document}
