@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Résultats - {{ fiche.title }} - SOUKLOU{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">Résultats: {{ fiche.title }}</h1>
+    <p class="text-gray-600">Statistiques et résultats des élèves</p>
+</div>
+
+<!-- Statistics -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-gray-500 text-sm mb-1">Tentatives totales</p>
+        <p class="text-3xl font-bold text-blue-600">{{ stats.total_attempts }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-gray-500 text-sm mb-1">Élèves uniques</p>
+        <p class="text-3xl font-bold text-green-600">{{ stats.unique_students }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-gray-500 text-sm mb-1">Score moyen</p>
+        <p class="text-3xl font-bold text-purple-600">{{ stats.average_score|floatformat:1 }}%</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <p class="text-gray-500 text-sm mb-1">Taux de réussite</p>
+        <p class="text-3xl font-bold text-orange-600">{{ stats.pass_rate|floatformat:1 }}%</p>
+    </div>
+</div>
+
+<!-- Results List -->
+<div class="bg-white rounded-xl shadow-md p-8">
+    <h2 class="text-2xl font-bold mb-6">Toutes les tentatives</h2>
+    {% if attempts %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="border-b">
+                    <th class="text-left py-3 px-4">Élève</th>
+                    <th class="text-left py-3 px-4">Score</th>
+                    <th class="text-left py-3 px-4">Questions</th>
+                    <th class="text-left py-3 px-4">Date</th>
+                    <th class="text-left py-3 px-4">Résultat</th>
+                    <th class="text-left py-3 px-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4">{{ attempt.student.get_full_name|default:attempt.student.username }}</td>
+                    <td class="py-3 px-4">
+                        <span class="font-semibold {% if attempt.passed %}text-green-600{% else %}text-red-600{% endif %}">
+                            {{ attempt.score|floatformat:1 }}%
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-gray-600">{{ attempt.correct_answers }}/{{ attempt.total_questions }}</td>
+                    <td class="py-3 px-4 text-gray-600">{{ attempt.completed_at|date:"d/m/Y H:i" }}</td>
+                    <td class="py-3 px-4">
+                        {% if attempt.passed %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Réussi</span>
+                        {% else %}
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">Échoué</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-4">
+                        <a href="{% url 'results:attempt_detail' attempt.pk %}" class="text-blue-600 hover:underline">
+                            Voir détails
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500 py-8">
+        Aucune tentative enregistrée pour cette fiche.
+    </p>
+    {% endif %}
+</div>
+
+<div class="mt-6">
+    <a href="{% url 'fiches:detail' fiche.pk %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+        Retour à la fiche
+    </a>
+</div>
+{% endblock %}
