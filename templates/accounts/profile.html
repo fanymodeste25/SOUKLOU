@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Profil - SOUKLOU{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-md p-8">
+        <h2 class="text-3xl font-bold mb-6">Mon Profil</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom d'utilisateur</label>
+                <p class="text-lg">{{ user.username }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <p class="text-lg">{{ user.email }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                <p class="text-lg">{{ user.first_name|default:"Non renseigné" }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                <p class="text-lg">{{ user.last_name|default:"Non renseigné" }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
+                <p class="text-lg">{{ user.get_role_display }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Membre depuis</label>
+                <p class="text-lg">{{ user.created_at|date:"d/m/Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

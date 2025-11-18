@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord - Enseignant{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-center">
+    <div>
+        <h1 class="text-3xl font-bold mb-2">Tableau de bord Enseignant</h1>
+        <p class="text-gray-600">Gérez vos fiches et suivez la performance de vos élèves</p>
+    </div>
+    <a href="{% url 'fiches:create' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+        + Créer une fiche
+    </a>
+</div>
+
+<!-- Statistics -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Mes fiches</p>
+                <p class="text-3xl font-bold text-blue-600">{{ total_fiches }}</p>
+            </div>
+            <div class="bg-blue-100 p-3 rounded-full">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Tentatives totales</p>
+                <p class="text-3xl font-bold text-green-600">{{ recent_attempts.count }}</p>
+            </div>
+            <div class="bg-green-100 p-3 rounded-full">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-md">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm">Questions créées</p>
+                <p class="text-3xl font-bold text-purple-600">
+                    {% for fiche in my_fiches %}{{ fiche.question_count|add:0 }}{% if not forloop.last %}+{% endif %}{% endfor %}
+                </p>
+            </div>
+            <div class="bg-purple-100 p-3 rounded-full">
+                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- My Fiches -->
+<div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-2xl font-bold mb-4">Mes fiches</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="border-b">
+                    <th class="text-left py-3 px-4">Titre</th>
+                    <th class="text-left py-3 px-4">Catégorie</th>
+                    <th class="text-left py-3 px-4">Questions</th>
+                    <th class="text-left py-3 px-4">Tentatives</th>
+                    <th class="text-left py-3 px-4">Vues</th>
+                    <th class="text-left py-3 px-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fiche in my_fiches %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4">
+                        <a href="{% url 'fiches:detail' fiche.pk %}" class="font-semibold text-blue-600 hover:underline">
+                            {{ fiche.title }}
+                        </a>
+                    </td>
+                    <td class="py-3 px-4 text-gray-600">{{ fiche.category }}</td>
+                    <td class="py-3 px-4">{{ fiche.question_count }}</td>
+                    <td class="py-3 px-4">{{ fiche.attempt_count }}</td>
+                    <td class="py-3 px-4">{{ fiche.views_count }}</td>
+                    <td class="py-3 px-4">
+                        <div class="flex space-x-2">
+                            <a href="{% url 'fiches:update' fiche.pk %}" class="text-blue-600 hover:underline text-sm">
+                                Modifier
+                            </a>
+                            <a href="{% url 'quizzes:question_create' fiche.pk %}" class="text-green-600 hover:underline text-sm">
+                                + Question
+                            </a>
+                            <a href="{% url 'results:fiche_results' fiche.pk %}" class="text-purple-600 hover:underline text-sm">
+                                Résultats
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="py-8 text-center text-gray-500">
+                        Vous n'avez pas encore créé de fiches.
+                        <a href="{% url 'fiches:create' %}" class="text-blue-600 hover:underline">Créer votre première fiche</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recent Attempts -->
+{% if recent_attempts %}
+<div class="bg-white rounded-xl shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4">Tentatives récentes</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full">
+            <thead>
+                <tr class="border-b">
+                    <th class="text-left py-3 px-4">Élève</th>
+                    <th class="text-left py-3 px-4">Fiche</th>
+                    <th class="text-left py-3 px-4">Score</th>
+                    <th class="text-left py-3 px-4">Date</th>
+                    <th class="text-left py-3 px-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in recent_attempts %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4">{{ attempt.student.get_full_name|default:attempt.student.username }}</td>
+                    <td class="py-3 px-4">{{ attempt.fiche.title }}</td>
+                    <td class="py-3 px-4">
+                        <span class="font-semibold {% if attempt.passed %}text-green-600{% else %}text-red-600{% endif %}">
+                            {{ attempt.score|floatformat:1 }}%
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-gray-600">{{ attempt.completed_at|date:"d/m/Y H:i" }}</td>
+                    <td class="py-3 px-4">
+                        <a href="{% url 'results:attempt_detail' attempt.pk %}" class="text-blue-600 hover:underline">
+                            Voir détails
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
