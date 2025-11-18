@@ -1,10 +1,25 @@
 import jwt from 'jsonwebtoken';
 import Message from '../models/Message.js';
 import Conversation from '../models/Conversation.js';
+import Notification from '../models/Notification.js';
 
 const userSockets = new Map(); // userId -> socketId
 
+// Fonction helper pour envoyer une notification à un utilisateur
+export const sendNotificationToUser = (userId, notification) => {
+  const socketId = userSockets.get(userId);
+  if (socketId) {
+    const io = global.io;
+    if (io) {
+      io.to(socketId).emit('new_notification', notification);
+    }
+  }
+};
+
 export const setupChatSocket = (io) => {
+  // Rendre io accessible globalement pour les notifications
+  global.io = io;
+
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;
 
@@ -27,6 +42,10 @@ export const setupChatSocket = (io) => {
 
     // Enregistrer la socket de l'utilisateur
     userSockets.set(socket.userId, socket.id);
+
+    // Envoyer les notifications non lues à l'utilisateur
+    const unreadNotifications = Notification.getUnreadByUserId(socket.userId);
+    socket.emit('unread_notifications', unreadNotifications);
 
     // Rejoindre les salles de conversation de l'utilisateur
     const conversations = Conversation.findByUserId(socket.userId);
@@ -120,6 +139,30 @@ export const setupChatSocket = (io) => {
     socket.on('join_conversation', (data) => {
       const { conversationId } = data;
       socket.join(`conversation_${conversationId}`);
+    });
+
+    // Événement: marquer une notification comme lue
+    socket.on('mark_notification_read', (data) => {
+      const { notificationId } = data;
+      try {
+        const notification = Notification.findById(notificationId);
+        if (notification && notification.user_id === socket.userId) {
+          Notification.markAsRead(notificationId);
+          socket.emit('notification_marked_read', { notificationId });
+        }
+      } catch (error) {
+        console.error('Erreur lors du marquage de la notification:', error);
+      }
+    });
+
+    // Événement: marquer toutes les notifications comme lues
+    socket.on('mark_all_notifications_read', () => {
+      try {
+        Notification.markAllAsRead(socket.userId);
+        socket.emit('all_notifications_marked_read');
+      } catch (error) {
+        console.error('Erreur lors du marquage des notifications:', error);
+      }
     });
 
     // Déconnexion

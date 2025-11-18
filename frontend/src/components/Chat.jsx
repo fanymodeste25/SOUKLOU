@@ -1,42 +1,33 @@
 import { useState, useEffect } from 'react'
 import { api } from '../services/api'
-import { initSocket, disconnectSocket, getSocket } from '../services/socket'
 import UserList from './UserList'
 import ConversationList from './ConversationList'
 import ChatWindow from './ChatWindow'
 
-function Chat({ user, onLogout }) {
+function Chat({ user, socket }) {
   const [conversations, setConversations] = useState([])
   const [users, setUsers] = useState([])
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [showUserList, setShowUserList] = useState(false)
-  const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-    // Initialiser Socket.io
-    const token = localStorage.getItem('token')
-    const socketInstance = initSocket(token)
-    setSocket(socketInstance)
+    if (!socket) return;
 
     // Écouter les événements socket
-    socketInstance.on('new_message', (message) => {
-      // Rafraîchir les conversations pour mettre à jour le dernier message
-      loadConversations()
-    })
-
-    socketInstance.on('notification', (data) => {
-      // Notification de nouveau message
-      loadConversations()
-    })
+    socket.on('new_message', loadConversations)
+    socket.on('notification', loadConversations)
 
     // Charger les données initiales
     loadConversations()
     loadUsers()
 
     return () => {
-      disconnectSocket()
+      if (socket) {
+        socket.off('new_message', loadConversations)
+        socket.off('notification', loadConversations)
+      }
     }
-  }, [])
+  }, [socket])
 
   const loadConversations = async () => {
     const result = await api.getConversations()
@@ -83,26 +74,9 @@ function Chat({ user, onLogout }) {
     setSelectedConversation(null)
   }
 
-  const handleLogout = () => {
-    disconnectSocket()
-    onLogout()
-  }
-
   return (
-    <div className="chat-container">
-      <div className="chat-sidebar">
-        <div className="chat-header">
-          <div className="user-info">
-            <h3>{user.prenom} {user.nom}</h3>
-            <span className={`role-badge ${user.role}`}>
-              {user.role === 'eleve' ? 'Élève' : 'Professeur'}
-            </span>
-          </div>
-          <button className="logout-btn" onClick={handleLogout}>
-            Déconnexion
-          </button>
-        </div>
-
+    <div className="chat-view">
+      <div className="chat-sidebar-view">
         <button className="new-conversation-btn" onClick={handleNewConversation}>
           + Nouvelle conversation
         </button>
@@ -114,7 +88,7 @@ function Chat({ user, onLogout }) {
         />
       </div>
 
-      <div className="chat-main">
+      <div className="chat-main-view">
         {showUserList ? (
           <UserList
             users={users}
@@ -130,7 +104,7 @@ function Chat({ user, onLogout }) {
           />
         ) : (
           <div className="chat-empty">
-            <h3>Bienvenue sur SOUKLOU 🎓</h3>
+            <h3>Bienvenue dans la messagerie 💬</h3>
             <p>Sélectionnez une conversation ou démarrez-en une nouvelle</p>
           </div>
         )}

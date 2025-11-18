@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Login from './components/Login'
 import Register from './components/Register'
-import Chat from './components/Chat'
+import Dashboard from './components/Dashboard'
 import './App.css'
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
   }
 
   if (user) {
-    return <Chat user={user} onLogout={handleLogout} />
+    return <Dashboard user={user} onLogout={handleLogout} />
   }
 
   return (

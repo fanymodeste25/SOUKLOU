@@ -44,6 +44,58 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id);
   CREATE INDEX IF NOT EXISTS idx_messages_sender ON messages(sender_id);
   CREATE INDEX IF NOT EXISTS idx_conversations_users ON conversations(user1_id, user2_id);
+
+  CREATE TABLE IF NOT EXISTS assignments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    due_date DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (teacher_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS submissions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    assignment_id INTEGER NOT NULL,
+    student_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    file_url TEXT,
+    status TEXT DEFAULT 'soumis' CHECK(status IN ('soumis', 'corrige')),
+    grade TEXT,
+    submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id),
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    UNIQUE(assignment_id, student_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    submission_id INTEGER NOT NULL,
+    teacher_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (submission_id) REFERENCES submissions(id),
+    FOREIGN KEY (teacher_id) REFERENCES users(id)
+  );
+
+  CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    link TEXT,
+    read_status INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_assignments_teacher ON assignments(teacher_id);
+  CREATE INDEX IF NOT EXISTS idx_submissions_assignment ON submissions(assignment_id);
+  CREATE INDEX IF NOT EXISTS idx_submissions_student ON submissions(student_id);
+  CREATE INDEX IF NOT EXISTS idx_comments_submission ON comments(submission_id);
+  CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
 `);
 
 export default db;

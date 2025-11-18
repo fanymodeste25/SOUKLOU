@@ -72,5 +72,156 @@ export const api = {
       headers: getAuthHeader()
     })
     return response.json()
+  },
+
+  // Assignments
+  createAssignment: async (data) => {
+    const response = await fetch(`${API_URL}/assignments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    })
+    return response.json()
+  },
+
+  getAssignments: async () => {
+    const response = await fetch(`${API_URL}/assignments`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  getAssignment: async (id) => {
+    const response = await fetch(`${API_URL}/assignments/${id}`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  updateAssignment: async (id, data) => {
+    const response = await fetch(`${API_URL}/assignments/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    })
+    return response.json()
+  },
+
+  deleteAssignment: async (id) => {
+    const response = await fetch(`${API_URL}/assignments/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  // Submissions
+  createSubmission: async (data) => {
+    const response = await fetch(`${API_URL}/submissions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    })
+    return response.json()
+  },
+
+  getSubmission: async (id) => {
+    const response = await fetch(`${API_URL}/submissions/${id}`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  getSubmissionsByAssignment: async (assignmentId) => {
+    const response = await fetch(`${API_URL}/submissions/assignment/${assignmentId}`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  getStudentSubmissions: async () => {
+    const response = await fetch(`${API_URL}/submissions/my-submissions`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  updateSubmission: async (id, data) => {
+    const response = await fetch(`${API_URL}/submissions/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    })
+    return response.json()
+  },
+
+  // Comments
+  createComment: async (data) => {
+    const response = await fetch(`${API_URL}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    })
+    return response.json()
+  },
+
+  getCommentsBySubmission: async (submissionId) => {
+    const response = await fetch(`${API_URL}/comments/submission/${submissionId}`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  // Notifications
+  getNotifications: async () => {
+    const response = await fetch(`${API_URL}/notifications`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  getUnreadNotifications: async () => {
+    const response = await fetch(`${API_URL}/notifications/unread`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  getNotificationCount: async () => {
+    const response = await fetch(`${API_URL}/notifications/unread-count`, {
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  markNotificationAsRead: async (id) => {
+    const response = await fetch(`${API_URL}/notifications/${id}/read`, {
+      method: 'PUT',
+      headers: getAuthHeader()
+    })
+    return response.json()
+  },
+
+  markAllNotificationsAsRead: async () => {
+    const response = await fetch(`${API_URL}/notifications/mark-all-read`, {
+      method: 'PUT',
+      headers: getAuthHeader()
+    })
+    return response.json()
   }
 }
